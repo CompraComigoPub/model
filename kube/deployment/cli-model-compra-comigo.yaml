@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-compracomigo
+  namespace: model-compracomigo
+  annotations:
+    container.apparmor.security.beta.kubernetes.io/nginx: localhost/model-compracomigo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model-compracomigo
+  template:
+    metadata:
+      labels:
+        app: model-compracomigo
+    spec:
+      serviceAccountName: model-compracomigo
+      automountServiceAccountToken: false
+      securityContext:
+        runAsUser: 10001
+        runAsGroup: 20001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: cli-model-compracomigo
+        image: cli-model-compracomigo
+        imagePullPolicy: IfNotPresent

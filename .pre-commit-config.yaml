@@ -1,0 +1,47 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.4.0
+  hooks:
+  - id: check-added-large-files # prevents giant files from being committed.
+    args: ['--maxkb=30000']
+  - id: debug-statements
+  - id: check-shebang-scripts-are-executable
+  - id: check-docstring-first
+  - id: check-vcs-permalinks
+  - id: check-byte-order-marker
+  - id: check-symlinks
+  - id: check-json
+  - id: check-xml
+  - id: check-yaml
+  - id: check-ast
+  - id: check-toml
+  - id: check-case-conflict
+  - id: check-builtin-literals
+  - id: check-merge-conflict
+  - id: check-executables-have-shebangs
+  - id: pretty-format-json
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+  - id: file-contents-sorter
+  - id: fix-byte-order-marker
+  - id: fix-encoding-pragma
+  - id: forbid-new-submodules
+  - id: destroyed-symlinks
+  - id: detect-private-key
+  - id: mixed-line-ending
+  - id: requirements-txt-fixer
+  - id: sort-simple-yaml
+- repo: https://github.com/psf/black
+  rev: 23.1.0
+  hooks:
+  - id: black
+    args: [--line-length=88]
+- repo: https://github.com/pycqa/flake8
+  rev: 6.0.0
+  hooks:
+  - id: flake8
+- repo: https://github.com/pycqa/isort
+  rev: 5.11.2
+  hooks:
+  - id: isort
+    args: [--profile=black]

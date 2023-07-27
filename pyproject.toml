@@ -1,0 +1,75 @@
+[tool.poetry]
+name = "model-compra-comigo"
+version = "0.1.0"
+description = "Application that experiments on data, generates and manages machine learning models ."
+authors = []
+readme = "README.md"
+repository = ""
+
+[tool.poetry.scripts]
+model-compra-comigo = "model_compra_comigo.interface.cli.cli:application"
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<3.10"
+pandas = "~1.3.2"
+scikit-learn = "~0.24.2"
+mlflow =  "~2.5.0"
+jupyter = "~1.0.0"
+autokeras = "~1.1.0"    
+matplotlib = "~3.7.1"
+tensorflow = "~2.12.0"
+numpy = "~1.23.5"
+tensorflow-datasets = "~4.9.2"
+tf-models-official = "~2.12.0"
+pmdarima = "~2.0.3"
+s3fs = "~2023.6.0"
+protobuf = "~3.20.0"
+autots = "~0.5.7"
+rich = "~13.4.2"
+Pillow = "~9.2.0"
+pyfiglet = "~0.7"
+typer = "~0.6.1"
+python-json-logger = "~2.0.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "~7.1.2"
+pre-commit = "~3.3.2"
+testfixtures = "~7.0.0"
+black = "~23.1.0"
+flake8 = "~6.0.0"
+isort = "~5.11.2"
+coverage-badge = "~1.1.0"
+Sphinx = "~7.0.1"
+autodoc = "~0.5.0"
+sphinxcontrib-napoleon = "~0.7"
+
+[tool.black]
+line-length = 88
+target-version = ['py37']
+include = '\.pyi?$'
+exclude = ''''''
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.bumpver]
+current_version = "0.1.0"
+version_pattern = "MAJOR.MINOR.PATCH[PYTAGNUM]"
+commit_message = "[version-update] {old_version} -> {new_version}"
+commit = true
+tag = false
+push = false
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = [
+    'current_version = "{version}"',
+    'version = "{version}"'
+]
+"README.md" = [
+    "version {version}",
+    "img.shields.io/static/v1.svg?label=version&message={version}&color=blue"
+]
+"model_compra_comigo/VERSION" = [
+    "{version}",
+]
