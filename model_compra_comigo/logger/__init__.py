@@ -1,4 +1,4 @@
-from model_compracomigo.logger.logger import logger
+from model_compra_comigo.logger.logger import logger
 
 __all__ = [
     "logger",

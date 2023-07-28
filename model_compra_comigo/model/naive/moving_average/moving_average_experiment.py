@@ -131,12 +131,13 @@ class MovingAverageExperiment:
 
             # Dataset Manipulation
             if train_data:
-                # Validation dataset
+                # Train dataset
                 windowed_train_data = DataHandler.generate_windowed_dataset(
                     data=train_data[1],
                     window_size=window_size,
                     batch_size=batch_size,
                     shuffle_buffer_size=shuffle_buffer_size,
+                    nforecast=nforecast,
                     shuffle=True,
                 )
             if validation_data:
@@ -146,6 +147,7 @@ class MovingAverageExperiment:
                     window_size=window_size,
                     batch_size=batch_size,
                     shuffle_buffer_size=shuffle_buffer_size,
+                    nforecast=nforecast,
                     shuffle=True,
                 )
             # Test dataset
@@ -154,6 +156,7 @@ class MovingAverageExperiment:
                 window_size=window_size,
                 batch_size=batch_size,
                 shuffle_buffer_size=shuffle_buffer_size,
+                nforecast=nforecast,
                 shuffle=True,
             )
 
@@ -220,22 +223,25 @@ class MovingAverageExperiment:
             )
             log_artifact(prediction_path)
 
-            # Last prediction
-            lp_path = "./tmp/prediction.png"
-            new_pts = (array(range(test_data[0][-1]+1, test_data[0][-1]+nforecast+1)))
-            plot = DataHandler.plot_all(
-                series_lines=[
-                    (test_data[0][-window_size:], test_data[1][-window_size:]),
-                ],
-                series_points=[(new_pts, prediction[-1])],
-                labels_lines=["series", "window"],
-                labels_points=["forecast"],
-                xy_label=["Time", "Value"],
-            )
-            plot.save(
-                lp_path,
-            )
-            log_artifact(lp_path)
+            try:
+                # Last prediction
+                lp_path = "./tmp/prediction.png"
+                new_pts = (array(range(test_data[0][-1]+1, test_data[0][-1]+nforecast+1)))
+                plot = DataHandler.plot_all(
+                    series_lines=[
+                        (test_data[0][-window_size:], test_data[1][-window_size:]),
+                    ],
+                    series_points=[(new_pts, prediction[-1])],
+                    labels_lines=["series", "window"],
+                    labels_points=["forecast"],
+                    xy_label=["Time", "Value"],
+                )
+                plot.save(
+                    lp_path,
+                )
+                log_artifact(lp_path)
+            except:
+                return
 
             if generate_full_visualization:
                 # Train

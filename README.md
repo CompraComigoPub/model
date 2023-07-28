@@ -114,3 +114,7 @@ To clean the repository up:
 ```
 make clean
 ```
+
+```bash
+poetry run model-compra-comigo run-experiment --data-path examples/tmp/dataset_exemplo.csv --specification-path examples/example_specification.yaml --destination-path examples/tmp/result_exemplo.csv
+```

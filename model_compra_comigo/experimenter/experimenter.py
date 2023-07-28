@@ -73,12 +73,75 @@ class Experimenter:
             artifact_location = destination_path,
         )
 
+        # Read Specification
+        #
+
         # Read data .
         data = DataHandler.read_dataset(path=data_path)
+        
+        # Treat data
+        #
+
+        # Runs experiments
+        time_column = "dias"
+        value_column = "target"
+        window_size=30
+        epochs=10
+        nforecast=20
+        batch_size=32
+        generate_full_visualization=False
+
+        MovingAverageExperiment.run(
+            train_data=(data[time_column], data[value_column]),
+            test_data=(data[time_column], data[value_column]),
+            window_size=window_size,
+            epochs=epochs,
+            batch_size=batch_size,
+            nforecast=nforecast,
+            generate_full_visualization=generate_full_visualization,
+            experiment_id=experiment_id
+        )
+
+        PreviousOneExperiment.run(
+            train_data=(data[time_column], data[value_column]),
+            test_data=(data[time_column], data[value_column]),
+            window_size=window_size,
+            epochs=epochs,
+            batch_size=batch_size,
+            nforecast=nforecast,
+            generate_full_visualization=generate_full_visualization,
+            experiment_id=experiment_id
+        )
+
+        RNNExampleExperiment.run(
+            train_data=(data[time_column], data[value_column]),
+            test_data=(data[time_column], data[value_column]),
+            window_size=window_size,
+            batch_size=batch_size,
+            epochs=epochs,
+            nforecast=nforecast,
+            generate_full_visualization=generate_full_visualization,
+            experiment_id=experiment_id
+        )
+        
+        #     MovingAverageExperiment.run()
+        # def run(
+        #     test_data: Tuple[ndarray, ndarray],
+        #     window_size: int,
+        #     batch_size: int,
+        #     epochs: int,
+        #     nforecast: int,
+        #     train_data: Tuple[ndarray, ndarray] = None,
+        #     validation_data: Optional[Tuple[ndarray, ndarray]] = None,
+        #     generate_full_visualization: bool = True,
+        #     shuffle_buffer_size: int = 1000,
+        #     run_name: Optional[str] = "Moving Average Model",
+        #     experiment_id: Optional[str] = None,
+        # ) -> None:
 
         # Read experiment specification .
-        specification = DataHandler.read_yaml(specification_path)
-        print(specification)
+        # specification = DataHandler.read_yaml(specification_path)
+        # print(specification)
         # Run experiments .
         # experiment = Experimenter.available_experiments[model_name]
         # run(

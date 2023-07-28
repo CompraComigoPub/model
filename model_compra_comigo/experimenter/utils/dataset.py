@@ -44,9 +44,11 @@ def generate_windowed_dataset(
         .map(lambda window: (window[:-nforecast], window[:-nforecast]))
     )
     if shuffle:
-        return dataset.shuffle(shuffle_buffer_size).batch(batch_size).prefetch(1)
+        dataset = dataset.shuffle(shuffle_buffer_size)
+    if batch_size == -1:
+        return dataset
     else:
-        return dataset.batch(batch_size).prefetch(1)
+        return dataset.batch(batch_size)
 
 
 def evaluate_nn(
@@ -69,4 +71,4 @@ def evaluate_nn(
         Evaluation .
 
     """
-    return ((x_valid - prediction) ** 2).mean()
+    return ((data_predicted - data_correct) ** 2).mean()

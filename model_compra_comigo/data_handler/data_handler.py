@@ -129,8 +129,8 @@ class DataHandler:
             )
         if data_type == "numpy":
             X, y = (
-                data.loc[:, data.columns != "target"].to_numpy(),
-                data["target"].to_numpy(),
+                data.loc[:, data.columns != target_column].to_numpy(),
+                data[target_column].to_numpy(),
             )
             return X, y
         return data
@@ -273,7 +273,7 @@ class DataHandler:
         window_size: int,
         batch_size: int,
         shuffle_buffer_size: int,
-        shuffle: bool = False,
+        shuffle: bool = True,
         nforecast: int = 1,
         prefetch: int = 1,
     ) -> Dataset:
@@ -310,14 +310,10 @@ class DataHandler:
             .map(lambda window: (window[:-nforecast], window[-nforecast:]))
         )
         if shuffle:
-            dataset = (
-                dataset.shuffle(shuffle_buffer_size)
-                .batch(batch_size)
-                .prefetch(prefetch)
-            )
-            return dataset
-        elif batch_size >= 1:
-            dataset = dataset.batch(batch_size).prefetch(prefetch)
+            dataset = dataset.shuffle(shuffle_buffer_size)
+        if batch_size >= 1:
+            dataset = dataset.batch(batch_size)
+        dataset = dataset.prefetch(prefetch)
         return dataset
 
     @staticmethod
@@ -449,3 +445,33 @@ class DataHandler:
             figsize=figsize,
             fontsize=fontsize,
         )
+    
+    @staticmethod
+    def model_forecast(
+        model: Any, 
+        data: ndarray,
+        window_size: int,
+    ) -> ndarray:
+        """
+        Generates a prediction from timeseries .
+
+        Parameters
+        ----------
+        model: Any
+            Model .
+        data: ndarray
+            Time series .
+        window_size: int
+            Window size for the prediction .
+
+        Returns
+        -------
+        Dataset
+            Time series dataset .
+
+        """
+        dataset = Dataset.from_tensor_slices(data)
+        dataset = dataset.window(window_size, shift=1, drop_remainder=True)
+        dataset = dataset.flat_map(lambda w: w.batch(window_size))
+        forecast = model.predict(dataset)
+        return forecast

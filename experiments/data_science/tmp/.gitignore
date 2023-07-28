@@ -1,1 +1,6 @@
-!*
+!.gitignore
+model/*
+model
+modelsummary.txt
+prediction.png
+test_predictions.csv

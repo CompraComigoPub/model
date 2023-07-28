@@ -140,6 +140,7 @@ class PreviousOneExperiment:
                     window_size=window_size,
                     batch_size=batch_size,
                     shuffle_buffer_size=shuffle_buffer_size,
+                    nforecast=nforecast,
                     shuffle=True,
                 )
             if validation_data:
@@ -149,6 +150,8 @@ class PreviousOneExperiment:
                     window_size=window_size,
                     batch_size=batch_size,
                     shuffle_buffer_size=shuffle_buffer_size,
+                    nforecast=nforecast,
+                    shuffle=True,
                 )
             # Test dataset
             windowed_test_data = DataHandler.generate_windowed_dataset(
@@ -156,6 +159,8 @@ class PreviousOneExperiment:
                 window_size=window_size,
                 batch_size=batch_size,
                 shuffle_buffer_size=shuffle_buffer_size,
+                nforecast=nforecast,
+                shuffle=True,
             )
 
             # Evaluate
@@ -221,23 +226,25 @@ class PreviousOneExperiment:
             )
             log_artifact(prediction_path)
 
-            # Last prediction
-            lp_path = "./tmp/prediction.png"
-            new_pts = (array(range(test_data[0][-1]+1, test_data[0][-1]+nforecast+1)))
-            plot = DataHandler.plot_all(
-                series_lines=[
-                    (test_data[0][-window_size:], test_data[1][-window_size:]),
-                ],
-                series_points=[(new_pts, prediction[-1])],
-                labels_lines=["series", "window"],
-                labels_points=["forecast"],
-                xy_label=["Time", "Value"],
-            )
-            plot.save(
-                lp_path,
-            )
-            log_artifact(lp_path)
-
+            try:
+                # Last prediction
+                lp_path = "./tmp/prediction.png"
+                new_pts = (array(range(test_data[0][-1]+1, test_data[0][-1]+nforecast+1)))
+                plot = DataHandler.plot_all(
+                    series_lines=[
+                        (test_data[0][-window_size:], test_data[1][-window_size:]),
+                    ],
+                    series_points=[(new_pts, prediction[-1])],
+                    labels_lines=["series", "window"],
+                    labels_points=["forecast"],
+                    xy_label=["Time", "Value"],
+                )
+                plot.save(
+                    lp_path,
+                )
+                log_artifact(lp_path)
+            except:
+                return
 
             # Gifs
             if generate_full_visualization:
